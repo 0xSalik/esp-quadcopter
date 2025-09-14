@@ -1,5 +1,5 @@
 # Copyright (c) 2025 Oleg Kalachev <okalachev@gmail.com>
-# Repository: https://github.com/okalachev/flix
+# Repository: https://github.com/0xSalik/esp-quadcopter
 
 """Python API for Flix drone."""
 

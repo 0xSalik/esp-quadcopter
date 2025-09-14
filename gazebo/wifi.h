@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // sendWiFi and receiveWiFi implementations for the simulation
 
@@ -17,13 +17,15 @@
 
 int wifiSocket;
 
-void setupWiFi() {
+void setupWiFi()
+{
 	wifiSocket = socket(AF_INET, SOCK_DGRAM, 0);
 	sockaddr_in addr; // local address
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
 	addr.sin_port = htons(WIFI_UDP_PORT);
-	if (bind(wifiSocket, (sockaddr *)&addr, sizeof(addr))) {
+	if (bind(wifiSocket, (sockaddr *)&addr, sizeof(addr)))
+	{
 		gzerr << "Failed to bind WiFi UDP socket on port " << WIFI_UDP_PORT << std::endl;
 		return;
 	}
@@ -32,8 +34,10 @@ void setupWiFi() {
 	gzmsg << "WiFi UDP socket initialized on port " << WIFI_UDP_PORT << " (remote port " << WIFI_UDP_REMOTE_PORT << ")" << std::endl;
 }
 
-void sendWiFi(const uint8_t *buf, int len) {
-	if (wifiSocket == 0) setupWiFi();
+void sendWiFi(const uint8_t *buf, int len)
+{
+	if (wifiSocket == 0)
+		setupWiFi();
 	sockaddr_in addr; // remote address
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(WIFI_UDP_REMOTE_ADDR);
@@ -41,8 +45,10 @@ void sendWiFi(const uint8_t *buf, int len) {
 	sendto(wifiSocket, buf, len, 0, (sockaddr *)&addr, sizeof(addr));
 }
 
-int receiveWiFi(uint8_t *buf, int len) {
-	struct pollfd pfd = { .fd = wifiSocket, .events = POLLIN };
-	if (poll(&pfd, 1, 0) <= 0) return 0; // check if there is data to read
+int receiveWiFi(uint8_t *buf, int len)
+{
+	struct pollfd pfd = {.fd = wifiSocket, .events = POLLIN};
+	if (poll(&pfd, 1, 0) <= 0)
+		return 0; // check if there is data to read
 	return recv(wifiSocket, buf, len, 0);
 }

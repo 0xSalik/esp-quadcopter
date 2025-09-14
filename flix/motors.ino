@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Motors output control using MOSFETs
 // In case of using ESCs, change PWM_STOP, PWM_MIN and PWM_MAX to appropriate values in μs, decrease PWM_FREQUENCY (to 400)
@@ -23,7 +23,8 @@ const int MOTOR_REAR_RIGHT = 1;
 const int MOTOR_FRONT_RIGHT = 2;
 const int MOTOR_FRONT_LEFT = 3;
 
-void setupMotors() {
+void setupMotors()
+{
 	print("Setup Motors\n");
 
 	// configure pins
@@ -36,26 +37,31 @@ void setupMotors() {
 	print("Motors initialized\n");
 }
 
-int getDutyCycle(float value) {
+int getDutyCycle(float value)
+{
 	value = constrain(value, 0, 1);
 	float pwm = mapff(value, 0, 1, PWM_MIN, PWM_MAX);
-	if (value == 0) pwm = PWM_STOP;
+	if (value == 0)
+		pwm = PWM_STOP;
 	float duty = mapff(pwm, 0, 1000000 / PWM_FREQUENCY, 0, (1 << PWM_RESOLUTION) - 1);
 	return round(duty);
 }
 
-void sendMotors() {
+void sendMotors()
+{
 	ledcWrite(MOTOR_0_PIN, getDutyCycle(motors[0]));
 	ledcWrite(MOTOR_1_PIN, getDutyCycle(motors[1]));
 	ledcWrite(MOTOR_2_PIN, getDutyCycle(motors[2]));
 	ledcWrite(MOTOR_3_PIN, getDutyCycle(motors[3]));
 }
 
-bool motorsActive() {
+bool motorsActive()
+{
 	return motors[0] != 0 || motors[1] != 0 || motors[2] != 0 || motors[3] != 0;
 }
 
-void testMotor(int n) {
+void testMotor(int n)
+{
 	print("Testing motor %d\n", n);
 	motors[n] = 1;
 	delay(50); // ESP32 may need to wait until the end of the current cycle to change duty https://github.com/espressif/arduino-esp32/issues/5306

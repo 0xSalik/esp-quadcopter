@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Flight control
 
@@ -57,7 +57,8 @@ float thrustTarget;
 extern const int MOTOR_REAR_LEFT, MOTOR_REAR_RIGHT, MOTOR_FRONT_RIGHT, MOTOR_FRONT_LEFT;
 extern float controlRoll, controlPitch, controlThrottle, controlYaw, controlMode;
 
-void control() {
+void control()
+{
 	interpretControls();
 	failsafe();
 	controlAttitude();
@@ -65,42 +66,55 @@ void control() {
 	controlTorque();
 }
 
-void interpretControls() {
+void interpretControls()
+{
 	// NOTE: put ACRO or MANUAL modes there if you want to use them
-	if (controlMode < 0.25) mode = STAB;
-	if (controlMode < 0.75) mode = STAB;
-	if (controlMode > 0.75) mode = STAB;
+	if (controlMode < 0.25)
+		mode = STAB;
+	if (controlMode < 0.75)
+		mode = STAB;
+	if (controlMode > 0.75)
+		mode = STAB;
 
-	if (mode == AUTO) return; // pilot is not effective in AUTO mode
+	if (mode == AUTO)
+		return; // pilot is not effective in AUTO mode
 
-	if (controlThrottle < 0.05 && controlYaw > 0.95) armed = true; // arm gesture
-	if (controlThrottle < 0.05 && controlYaw < -0.95) armed = false; // disarm gesture
+	if (controlThrottle < 0.05 && controlYaw > 0.95)
+		armed = true; // arm gesture
+	if (controlThrottle < 0.05 && controlYaw < -0.95)
+		armed = false; // disarm gesture
 
 	thrustTarget = controlThrottle;
 
-	if (mode == STAB) {
+	if (mode == STAB)
+	{
 		float yawTarget = attitudeTarget.getYaw();
-		if (invalid(yawTarget) || controlYaw != 0) yawTarget = attitude.getYaw(); // reset yaw target if NAN or pilot commands yaw rate
+		if (invalid(yawTarget) || controlYaw != 0)
+			yawTarget = attitude.getYaw(); // reset yaw target if NAN or pilot commands yaw rate
 		attitudeTarget = Quaternion::fromEuler(Vector(controlRoll * tiltMax, controlPitch * tiltMax, yawTarget));
 		ratesExtra = Vector(0, 0, -controlYaw * maxRate.z); // positive yaw stick means clockwise rotation in FLU
 	}
 
-	if (mode == ACRO) {
+	if (mode == ACRO)
+	{
 		attitudeTarget.invalidate(); // skip attitude control
 		ratesTarget.x = controlRoll * maxRate.x;
 		ratesTarget.y = controlPitch * maxRate.y;
 		ratesTarget.z = -controlYaw * maxRate.z; // positive yaw stick means clockwise rotation in FLU
 	}
 
-	if (mode == MANUAL) { // passthrough mode
+	if (mode == MANUAL)
+	{								 // passthrough mode
 		attitudeTarget.invalidate(); // skip attitude control
-		ratesTarget.invalidate(); // skip rate control
+		ratesTarget.invalidate();	 // skip rate control
 		torqueTarget = Vector(controlRoll, controlPitch, -controlYaw) * 0.01;
 	}
 }
 
-void controlAttitude() {
-	if (!armed || attitudeTarget.invalid()) { // skip attitude control
+void controlAttitude()
+{
+	if (!armed || attitudeTarget.invalid())
+	{ // skip attitude control
 		rollPID.reset();
 		pitchPID.reset();
 		yawPID.reset();
@@ -120,9 +134,10 @@ void controlAttitude() {
 	ratesTarget.z = yawPID.update(yawError, dt) + ratesExtra.z;
 }
 
-
-void controlRates() {
-	if (!armed || ratesTarget.invalid()) { // skip rates control
+void controlRates()
+{
+	if (!armed || ratesTarget.invalid())
+	{ // skip rates control
 		rollRatePID.reset();
 		pitchRatePID.reset();
 		yawRatePID.reset();
@@ -137,15 +152,19 @@ void controlRates() {
 	torqueTarget.z = yawRatePID.update(error.z, dt);
 }
 
-void controlTorque() {
-	if (!torqueTarget.valid()) return; // skip torque control
+void controlTorque()
+{
+	if (!torqueTarget.valid())
+		return; // skip torque control
 
-	if (!armed) {
+	if (!armed)
+	{
 		memset(motors, 0, sizeof(motors)); // stop motors if disarmed
 		return;
 	}
 
-	if (thrustTarget < 0.05) {
+	if (thrustTarget < 0.05)
+	{
 		// minimal thrust to indicate armed state
 		motors[0] = ARMED_THRUST;
 		motors[1] = ARMED_THRUST;
@@ -165,12 +184,19 @@ void controlTorque() {
 	motors[3] = constrain(motors[3], 0, 1);
 }
 
-const char* getModeName() {
-	switch (mode) {
-		case MANUAL: return "MANUAL";
-		case ACRO: return "ACRO";
-		case STAB: return "STAB";
-		case AUTO: return "AUTO";
-		default: return "UNKNOWN";
+const char *getModeName()
+{
+	switch (mode)
+	{
+	case MANUAL:
+		return "MANUAL";
+	case ACRO:
+		return "ACRO";
+	case STAB:
+		return "STAB";
+	case AUTO:
+		return "AUTO";
+	default:
+		return "UNKNOWN";
 	}
 }

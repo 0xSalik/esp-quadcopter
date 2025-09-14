@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Parameters storage in flash memory
 
@@ -12,7 +12,8 @@ extern float mavlinkControlScale;
 
 Preferences storage;
 
-struct Parameter {
+struct Parameter
+{
 	const char *name; // max length is 16
 	float *variable;
 	float value; // cache
@@ -73,11 +74,14 @@ Parameter parameters[] = {
 	{"RC_MODE", &modeChannel},
 };
 
-void setupParameters() {
+void setupParameters()
+{
 	storage.begin("flix", false);
 	// Read parameters from storage
-	for (auto &parameter : parameters) {
-		if (!storage.isKey(parameter.name)) {
+	for (auto &parameter : parameters)
+	{
+		if (!storage.isKey(parameter.name))
+		{
 			storage.putFloat(parameter.name, *parameter.variable);
 		}
 		*parameter.variable = storage.getFloat(parameter.name, *parameter.variable);
@@ -85,32 +89,43 @@ void setupParameters() {
 	}
 }
 
-int parametersCount() {
+int parametersCount()
+{
 	return sizeof(parameters) / sizeof(parameters[0]);
 }
 
-const char *getParameterName(int index) {
-	if (index < 0 || index >= parametersCount()) return "";
+const char *getParameterName(int index)
+{
+	if (index < 0 || index >= parametersCount())
+		return "";
 	return parameters[index].name;
 }
 
-float getParameter(int index) {
-	if (index < 0 || index >= parametersCount()) return NAN;
+float getParameter(int index)
+{
+	if (index < 0 || index >= parametersCount())
+		return NAN;
 	return *parameters[index].variable;
 }
 
-float getParameter(const char *name) {
-	for (auto &parameter : parameters) {
-		if (strcmp(parameter.name, name) == 0) {
+float getParameter(const char *name)
+{
+	for (auto &parameter : parameters)
+	{
+		if (strcmp(parameter.name, name) == 0)
+		{
 			return *parameter.variable;
 		}
 	}
 	return NAN;
 }
 
-bool setParameter(const char *name, const float value) {
-	for (auto &parameter : parameters) {
-		if (strcmp(parameter.name, name) == 0) {
+bool setParameter(const char *name, const float value)
+{
+	for (auto &parameter : parameters)
+	{
+		if (strcmp(parameter.name, name) == 0)
+		{
 			*parameter.variable = value;
 			return true;
 		}
@@ -118,27 +133,36 @@ bool setParameter(const char *name, const float value) {
 	return false;
 }
 
-void syncParameters() {
+void syncParameters()
+{
 	static double lastSync = 0;
-	if (t - lastSync < 1) return; // sync once per second
-	if (motorsActive()) return; // don't use flash while flying, it may cause a delay
+	if (t - lastSync < 1)
+		return; // sync once per second
+	if (motorsActive())
+		return; // don't use flash while flying, it may cause a delay
 	lastSync = t;
 
-	for (auto &parameter : parameters) {
-		if (parameter.value == *parameter.variable) continue;
-		if (isnan(parameter.value) && isnan(*parameter.variable)) continue; // handle NAN != NAN
+	for (auto &parameter : parameters)
+	{
+		if (parameter.value == *parameter.variable)
+			continue;
+		if (isnan(parameter.value) && isnan(*parameter.variable))
+			continue; // handle NAN != NAN
 		storage.putFloat(parameter.name, *parameter.variable);
 		parameter.value = *parameter.variable;
 	}
 }
 
-void printParameters() {
-	for (auto &parameter : parameters) {
+void printParameters()
+{
+	for (auto &parameter : parameters)
+	{
 		print("%s = %g\n", parameter.name, *parameter.variable);
 	}
 }
 
-void resetParameters() {
+void resetParameters()
+{
 	storage.clear();
 	ESP.restart();
 }

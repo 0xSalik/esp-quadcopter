@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Work with the IMU sensor
 
@@ -14,13 +14,15 @@ Vector accBias;
 Vector accScale(1, 1, 1);
 Vector gyroBias;
 
-void setupIMU() {
+void setupIMU()
+{
 	print("Setup IMU\n");
 	IMU.begin();
 	configureIMU();
 }
 
-void configureIMU() {
+void configureIMU()
+{
 	IMU.setAccelRange(IMU.ACCEL_RANGE_4G);
 	IMU.setGyroRange(IMU.GYRO_RANGE_2000DPS);
 	IMU.setDLPF(IMU.DLPF_MAX);
@@ -28,7 +30,8 @@ void configureIMU() {
 	IMU.setupInterrupt();
 }
 
-void readIMU() {
+void readIMU()
+{
 	IMU.waitForData();
 	IMU.getGyro(gyro.x, gyro.y, gyro.z);
 	IMU.getAccel(acc.x, acc.y, acc.z);
@@ -41,23 +44,27 @@ void readIMU() {
 	rotateIMU(gyro);
 }
 
-void rotateIMU(Vector& data) {
+void rotateIMU(Vector &data)
+{
 	// Rotate from LFD to FLU
 	// NOTE: In case of using other IMU orientation, change this line:
 	data = Vector(data.y, data.x, -data.z);
 	// Axes orientation for various boards: https://github.com/okalachev/flixperiph#imu-axes-orientation
 }
 
-void calibrateGyroOnce() {
+void calibrateGyroOnce()
+{
 	static float landedTime = 0;
 	landedTime = landed ? landedTime + dt : 0;
-	if (landedTime < 2) return; // calibrate only if definitely stationary
+	if (landedTime < 2)
+		return; // calibrate only if definitely stationary
 
 	static LowPassFilter<Vector> gyroCalibrationFilter(0.001);
 	gyroBias = gyroCalibrationFilter.update(gyro);
 }
 
-void calibrateAccel() {
+void calibrateAccel()
+{
 	print("Calibrating accelerometer\n");
 	IMU.setAccelRange(IMU.ACCEL_RANGE_2G); // the most sensitive mode
 
@@ -85,14 +92,16 @@ void calibrateAccel() {
 	configureIMU();
 }
 
-void calibrateAccelOnce() {
+void calibrateAccelOnce()
+{
 	const int samples = 1000;
 	static Vector accMax(-INFINITY, -INFINITY, -INFINITY);
 	static Vector accMin(INFINITY, INFINITY, INFINITY);
 
 	// Compute the average of the accelerometer readings
 	acc = Vector(0, 0, 0);
-	for (int i = 0; i < samples; i++) {
+	for (int i = 0; i < samples; i++)
+	{
 		IMU.waitForData();
 		Vector sample;
 		IMU.getAccel(sample.x, sample.y, sample.z);
@@ -101,24 +110,32 @@ void calibrateAccelOnce() {
 	acc = acc / samples;
 
 	// Update the maximum and minimum values
-	if (acc.x > accMax.x) accMax.x = acc.x;
-	if (acc.y > accMax.y) accMax.y = acc.y;
-	if (acc.z > accMax.z) accMax.z = acc.z;
-	if (acc.x < accMin.x) accMin.x = acc.x;
-	if (acc.y < accMin.y) accMin.y = acc.y;
-	if (acc.z < accMin.z) accMin.z = acc.z;
+	if (acc.x > accMax.x)
+		accMax.x = acc.x;
+	if (acc.y > accMax.y)
+		accMax.y = acc.y;
+	if (acc.z > accMax.z)
+		accMax.z = acc.z;
+	if (acc.x < accMin.x)
+		accMin.x = acc.x;
+	if (acc.y < accMin.y)
+		accMin.y = acc.y;
+	if (acc.z < accMin.z)
+		accMin.z = acc.z;
 	// Compute scale and bias
 	accScale = (accMax - accMin) / 2 / ONE_G;
 	accBias = (accMax + accMin) / 2;
 }
 
-void printIMUCalibration() {
+void printIMUCalibration()
+{
 	print("gyro bias: %f %f %f\n", gyroBias.x, gyroBias.y, gyroBias.z);
 	print("accel bias: %f %f %f\n", accBias.x, accBias.y, accBias.z);
 	print("accel scale: %f %f %f\n", accScale.x, accScale.y, accScale.z);
 }
 
-void printIMUInfo() {
+void printIMUInfo()
+{
 	IMU.status() ? print("status: ERROR %d\n", IMU.status()) : print("status: OK\n");
 	print("model: %s\n", IMU.getModel());
 	print("who am I: 0x%02X\n", IMU.whoAmI());

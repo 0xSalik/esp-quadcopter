@@ -5,7 +5,7 @@ To use Flix, you need to build the firmware and upload it to the ESP32 board. Fo
 For the start, clone the repository using git:
 
 ```bash
-git clone https://github.com/okalachev/flix.git
+git clone https://github.com/0xSalik/esp-quadcopter.git
 cd flix
 ```
 
@@ -91,7 +91,7 @@ The latest version of Ubuntu supported by Gazebo 11 simulator is 22.04. If you h
 3. If you're using a virtual machine, make sure that its network is set to the **bridged** mode with Wi-Fi adapter selected.
 4. Run the simulation.
 5. Open QGroundControl app. It should connect and begin showing the virtual drone's telemetry automatically.
-6. Go to the settings and enable *Virtual Joystick*. *Auto-Center Throttle* setting **should be disabled**.
+6. Go to the settings and enable _Virtual Joystick_. _Auto-Center Throttle_ setting **should be disabled**.
 7. Use the virtual joystick to fly the drone!
 
 #### Control with USB remote control
@@ -110,11 +110,11 @@ The latest version of Ubuntu supported by Gazebo 11 simulator is 22.04. If you h
 2. Windows users might need to install [USB to UART bridge driver from Silicon Labs](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).
 3. Install ESP32 core, version 3.2.0. See the [official Espressif's instructions](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html#installing-using-arduino-ide) on installing ESP32 Core in Arduino IDE.
 4. Install the following libraries using [Library Manager](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library):
-   * `FlixPeriph`, the latest version.
-   * `MAVLink`, version 2.0.16.
-5. Clone the project using git or [download the source code as a ZIP archive](https://codeload.github.com/okalachev/flix/zip/refs/heads/master).
+   - `FlixPeriph`, the latest version.
+   - `MAVLink`, version 2.0.16.
+5. Clone the project using git or [download the source code as a ZIP archive](https://codeload.github.com/0xSalik/esp-quadcopter/zip/refs/heads/main).
 6. Open the downloaded Arduino sketch `flix/flix.ino` in Arduino IDE.
-7. Connect your ESP32 board to the computer and choose correct board type in Arduino IDE (*WEMOS D1 MINI ESP32* for ESP32 Mini) and the port.
+7. Connect your ESP32 board to the computer and choose correct board type in Arduino IDE (_WEMOS D1 MINI ESP32_ for ESP32 Mini) and the port.
 8. [Build and upload](https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch) the firmware using Arduino IDE.
 
 ### Command line (Windows, Linux, macOS)
@@ -164,7 +164,7 @@ Before flight you need to calibrate the accelerometer:
 2. Power the drone using the battery.
 3. Connect your smartphone to the appeared `flix` Wi-Fi network (password: `flixwifi`).
 4. Open QGroundControl app. It should connect and begin showing the drone's telemetry automatically.
-5. Go to the settings and enable *Virtual Joystick*. *Auto-Center Throttle* setting **should be disabled**.
+5. Go to the settings and enable _Virtual Joystick_. _Auto-Center Throttle_ setting **should be disabled**.
 6. Use the virtual joystick to fly the drone!
 
 > [!TIP]
@@ -187,7 +187,7 @@ If your drone doesn't have RC receiver installed, you can use USB remote control
 3. Power up the drone.
 4. Connect your computer to the appeared `flix` Wi-Fi network (password: `flixwifi`).
 5. Launch QGroundControl app. It should connect and begin showing the drone's telemetry automatically.
-6. Go the the QGroundControl menu ⇒ *Vehicle Setup* ⇒ *Joystick*. Calibrate you USB remote control there.
+6. Go the the QGroundControl menu ⇒ _Vehicle Setup_ ⇒ _Joystick_. Calibrate you USB remote control there.
 7. Use the USB remote control to fly the drone!
 
 > [!NOTE]
@@ -217,7 +217,7 @@ Flight mode is changed using mode switch on the remote control or using the comm
 
 #### STAB
 
-The default mode is *STAB*. In this mode, the drone stabilizes its attitude (orientation). The left stick controls throttle and yaw rate, the right stick controls pitch and roll angles.
+The default mode is _STAB_. In this mode, the drone stabilizes its attitude (orientation). The left stick controls throttle and yaw rate, the right stick controls pitch and roll angles.
 
 > [!IMPORTANT]
 > The drone doesn't stabilize its position, so slight drift is possible. The pilot should compensate it manually.
@@ -234,16 +234,16 @@ Manual mode disables all the stabilization, and the pilot inputs are passed dire
 
 In this mode, the pilot inputs are ignored (except the mode switch, if configured). The drone can be controlled using [pyflix](../tools/pyflix/) Python library, or by modifying the firmware to implement the needed autonomous behavior.
 
-If the pilot moves the control sticks, the drone will switch back to *STAB* mode.
+If the pilot moves the control sticks, the drone will switch back to _STAB_ mode.
 
 ## Adjusting parameters
 
-You can adjust some of the drone's parameters (include PID coefficients) in QGroundControl app. In order to do that, go to the QGroundControl menu ⇒ *Vehicle Setup* ⇒ *Parameters*.
+You can adjust some of the drone's parameters (include PID coefficients) in QGroundControl app. In order to do that, go to the QGroundControl menu ⇒ _Vehicle Setup_ ⇒ _Parameters_.
 
 <img src="img/parameters.png" width="400">
 
 ## CLI access
 
-In addition to accessing the drone's command line interface (CLI) using the serial port, you can also access it with QGroundControl using Wi-Fi connection. To do that, go to the QGroundControl menu ⇒ *Vehicle Setup* ⇒ *Analyze Tools* ⇒ *MAVLink Console*.
+In addition to accessing the drone's command line interface (CLI) using the serial port, you can also access it with QGroundControl using Wi-Fi connection. To do that, go to the QGroundControl menu ⇒ _Vehicle Setup_ ⇒ _Analyze Tools_ ⇒ _MAVLink Console_.
 
 <img src="img/cli.png" width="400">

@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // In-RAM logging
 
@@ -8,13 +8,14 @@
 #define LOG_RATE 100
 #define LOG_DURATION 10
 #define LOG_PERIOD 1.0 / LOG_RATE
-#define LOG_SIZE LOG_DURATION * LOG_RATE
+#define LOG_SIZE LOG_DURATION *LOG_RATE
 
 float tFloat;
 Vector attitudeEuler;
 Vector attitudeTargetEuler;
 
-struct LogEntry {
+struct LogEntry
+{
 	const char *name;
 	float *value;
 };
@@ -33,46 +34,56 @@ LogEntry logEntries[] = {
 	{"attitudeTarget.x", &attitudeTargetEuler.x},
 	{"attitudeTarget.y", &attitudeTargetEuler.y},
 	{"attitudeTarget.z", &attitudeTargetEuler.z},
-	{"thrustTarget", &thrustTarget}
-};
+	{"thrustTarget", &thrustTarget}};
 
 const int logColumns = sizeof(logEntries) / sizeof(logEntries[0]);
 float logBuffer[LOG_SIZE][logColumns];
 
-void prepareLogData() {
+void prepareLogData()
+{
 	tFloat = t;
 	attitudeEuler = attitude.toEuler();
 	attitudeTargetEuler = attitudeTarget.toEuler();
 }
 
-void logData() {
-	if (!armed) return;
+void logData()
+{
+	if (!armed)
+		return;
 	static int logPointer = 0;
 	static double logTime = 0;
-	if (t - logTime < LOG_PERIOD) return;
+	if (t - logTime < LOG_PERIOD)
+		return;
 	logTime = t;
 
 	prepareLogData();
 
-	for (int i = 0; i < logColumns; i++) {
+	for (int i = 0; i < logColumns; i++)
+	{
 		logBuffer[logPointer][i] = *logEntries[i].value;
 	}
 
 	logPointer++;
-	if (logPointer >= LOG_SIZE) {
+	if (logPointer >= LOG_SIZE)
+	{
 		logPointer = 0;
 	}
 }
 
-void dumpLog() {
+void dumpLog()
+{
 	// Print header
-	for (int i = 0; i < logColumns; i++) {
+	for (int i = 0; i < logColumns; i++)
+	{
 		print("%s%s", logEntries[i].name, i < logColumns - 1 ? "," : "\n");
 	}
 	// Print data
-	for (int i = 0; i < LOG_SIZE; i++) {
-		if (logBuffer[i][0] == 0) continue; // skip empty records
-		for (int j = 0; j < logColumns; j++) {
+	for (int i = 0; i < LOG_SIZE; i++)
+	{
+		if (logBuffer[i][0] == 0)
+			continue; // skip empty records
+		for (int j = 0; j < logColumns; j++)
+		{
 			print("%g%s", logBuffer[i][j], j < logColumns - 1 ? "," : "\n");
 		}
 	}

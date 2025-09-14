@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Declarations of some functions and variables in Arduino code
 
@@ -33,11 +33,11 @@ void interpretControls();
 void controlAttitude();
 void controlRates();
 void controlTorque();
-const char* getModeName();
+const char *getModeName();
 void sendMotors();
 bool motorsActive();
 void testMotor(int n);
-void print(const char* format, ...);
+void print(const char *format, ...);
 void pause(float duration);
 void doCommand(String str, bool echo);
 void handleInput();
@@ -51,7 +51,7 @@ void sendMavlink();
 void sendMessage(const void *msg);
 void receiveMavlink();
 void handleMavlink(const void *_msg);
-void mavlinkPrint(const char* str);
+void mavlinkPrint(const char *str);
 void sendMavlinkPrint();
 inline Quaternion fluToFrd(const Quaternion &q);
 void failsafe();

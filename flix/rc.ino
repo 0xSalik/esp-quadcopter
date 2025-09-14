@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Work with the RC receiver
 
@@ -9,22 +9,26 @@
 SBUS RC(Serial2); // NOTE: Use RC(Serial2, 16, 17) if you use the old UART2 pins
 
 uint16_t channels[16]; // raw rc channels
-double controlTime; // time of the last controls update
+double controlTime;	   // time of the last controls update
 float channelZero[16]; // calibration zero values
-float channelMax[16]; // calibration max values
+float channelMax[16];  // calibration max values
 
 // Channels mapping (using float to store in parameters):
 float rollChannel = NAN, pitchChannel = NAN, throttleChannel = NAN, yawChannel = NAN, modeChannel = NAN;
 
-void setupRC() {
+void setupRC()
+{
 	print("Setup RC\n");
 	RC.begin();
 }
 
-bool readRC() {
-	if (RC.read()) {
+bool readRC()
+{
+	if (RC.read())
+	{
 		SBUSData data = RC.data();
-		for (int i = 0; i < 16; i++) channels[i] = data.ch[i]; // copy channels data
+		for (int i = 0; i < 16; i++)
+			channels[i] = data.ch[i]; // copy channels data
 		normalizeRC();
 		controlTime = t;
 		return true;
@@ -32,9 +36,11 @@ bool readRC() {
 	return false;
 }
 
-void normalizeRC() {
+void normalizeRC()
+{
 	float controls[16];
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 16; i++)
+	{
 		controls[i] = mapf(channels[i], channelZero[i], channelMax[i], 0, 1);
 	}
 	// Update control values
@@ -45,7 +51,8 @@ void normalizeRC() {
 	controlMode = modeChannel >= 0 ? controls[(int)modeChannel] : NAN;
 }
 
-void calibrateRC() {
+void calibrateRC()
+{
 	uint16_t zero[16];
 	uint16_t center[16];
 	uint16_t max[16];
@@ -61,32 +68,41 @@ void calibrateRC() {
 	printRCCalibration();
 }
 
-void calibrateRCChannel(float *channel, uint16_t in[16], uint16_t out[16], const char *str) {
+void calibrateRCChannel(float *channel, uint16_t in[16], uint16_t out[16], const char *str)
+{
 	print("%s", str);
 	pause(3);
-	for (int i = 0; i < 30; i++) readRC(); // try update 30 times max
+	for (int i = 0; i < 30; i++)
+		readRC(); // try update 30 times max
 	memcpy(out, channels, sizeof(channels));
 
-	if (channel == NULL) return; // no channel to calibrate
+	if (channel == NULL)
+		return; // no channel to calibrate
 
 	// Find channel that changed the most between in and out
 	int ch = -1, diff = 0;
-	for (int i = 0; i < 16; i++) {
-		if (abs(out[i] - in[i]) > diff) {
+	for (int i = 0; i < 16; i++)
+	{
+		if (abs(out[i] - in[i]) > diff)
+		{
 			ch = i;
 			diff = abs(out[i] - in[i]);
 		}
 	}
-	if (ch >= 0 && diff > 10) { // difference threshold is 10
+	if (ch >= 0 && diff > 10)
+	{ // difference threshold is 10
 		*channel = ch;
 		channelZero[ch] = in[ch];
 		channelMax[ch] = out[ch];
-	} else {
+	}
+	else
+	{
 		*channel = NAN;
 	}
 }
 
-void printRCCalibration() {
+void printRCCalibration()
+{
 	print("Control   Ch     Zero   Max\n");
 	print("Roll      %-7g%-7g%-7g\n", rollChannel, rollChannel >= 0 ? channelZero[(int)rollChannel] : NAN, rollChannel >= 0 ? channelMax[(int)rollChannel] : NAN);
 	print("Pitch     %-7g%-7g%-7g\n", pitchChannel, pitchChannel >= 0 ? channelZero[(int)pitchChannel] : NAN, pitchChannel >= 0 ? channelMax[(int)pitchChannel] : NAN);

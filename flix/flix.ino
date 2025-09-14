@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Main firmware file
 
@@ -10,18 +10,19 @@
 #define SERIAL_BAUDRATE 115200
 #define WIFI_ENABLED 1
 
-double t = NAN; // current step time, s
-float dt; // time delta from previous step, s
+double t = NAN;												  // current step time, s
+float dt;													  // time delta from previous step, s
 float controlRoll, controlPitch, controlYaw, controlThrottle; // pilot's inputs, range [-1, 1]
 float controlMode = NAN;
-Vector gyro; // gyroscope data
-Vector acc; // accelerometer data, m/s/s
-Vector rates; // filtered angular rates, rad/s
+Vector gyro;		 // gyroscope data
+Vector acc;			 // accelerometer data, m/s/s
+Vector rates;		 // filtered angular rates, rad/s
 Quaternion attitude; // estimated attitude
-bool landed; // are we landed and stationary
-float motors[4]; // normalized motors thrust in range [0..1]
+bool landed;		 // are we landed and stationary
+float motors[4];	 // normalized motors thrust in range [0..1]
 
-void setup() {
+void setup()
+{
 	Serial.begin(SERIAL_BAUDRATE);
 	print("Initializing flix\n");
 	disableBrownOut();
@@ -38,7 +39,8 @@ void setup() {
 	print("Initializing complete\n");
 }
 
-void loop() {
+void loop()
+{
 	readIMU();
 	step();
 	readRC();

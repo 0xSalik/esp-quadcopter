@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // PID controller implementation
 
@@ -7,7 +7,8 @@
 
 #include "lpf.h"
 
-class PID {
+class PID
+{
 public:
 	float p = 0;
 	float i = 0;
@@ -21,10 +22,12 @@ public:
 
 	PID(float p, float i, float d, float windup = 0, float dAlpha = 1) : p(p), i(i), d(d), windup(windup), lpf(dAlpha) {};
 
-	float update(float error, float dt) {
+	float update(float error, float dt)
+	{
 		integral += error * dt;
 
-		if (isfinite(prevError) && dt > 0) {
+		if (isfinite(prevError) && dt > 0)
+		{
 			// calculate derivative if both dt and prevError are valid
 			derivative = (error - prevError) / dt;
 
@@ -37,7 +40,8 @@ public:
 		return p * error + constrain(i * integral, -windup, windup) + d * derivative; // PID
 	}
 
-	void reset() {
+	void reset()
+	{
 		prevError = NAN;
 		integral = 0;
 		derivative = 0;

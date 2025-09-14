@@ -24,6 +24,6 @@ packages = ["pyflix"]
 pyflix = ["README.md"]
 
 [project.urls]
-Homepage = "https://github.com/okalachev/flix/tree/master/tools/pyflix"
-Repository = "https://github.com/okalachev/flix"
-Issues = "https://github.com/okalachev/flix/issues"
+Homepage = "https://github.com/0xSalik/esp-quadcopter/tree/main/tools/pyflix"
+Repository = "https://github.com/0xSalik/esp-quadcopter"
+Issues = "https://github.com/0xSalik/esp-quadcopter/issues"

@@ -6,7 +6,7 @@ To use the library, connect to the drone's Wi-Fi. To use it with the simulator, 
 
 ## Installation
 
-If you have cloned the [repo](https://github.com/okalachev/flix), install the library from the repo:
+If you have cloned the [repo](https://github.com/0xSalik/esp-quadcopter), install the library from the repo:
 
 ```bash
 cd /path/to/flix/repo
@@ -51,7 +51,7 @@ print(flix.gyro)            # gyroscope output (list)
 
 ### Events
 
-The Flix object implements the *Observable* pattern, allowing to listen for events. You can subscribe to events using `on` method:
+The Flix object implements the _Observable_ pattern, allowing to listen for events. You can subscribe to events using `on` method:
 
 ```python
 flix.on('connected', lambda: print('Connected to Flix'))
@@ -78,26 +78,26 @@ flix.wait('attitude_euler', lambda att: att[0] > 0)  # wait until roll angle is 
 
 Full list of events:
 
-|Event|Description|Associated data|
-|-----|-----------|----------------|
-|`connected`|Connected to the drone||
-|`disconnected`|Connection is lost||
-|`armed`|Armed state update|Armed state (*bool*)|
-|`mode`|Flight mode update|Flight mode (*str*)|
-|`landed`|Landed state update|Landed state (*bool*)|
-|`print`|The drone sends text to the console|Text|
-|`attitude`|Attitude update|Attitude quaternion (*list*)|
-|`attitude_euler`|Attitude update|Euler angles (*list*)|
-|`rates`|Angular rates update|Angular rates (*list*)|
-|`channels`|Raw RC channels update|Raw RC channels (*list*)|
-|`motors`|Motors outputs update|Motors outputs (*list*)|
-|`acc`|Accelerometer update|Accelerometer output (*list*)|
-|`gyro`|Gyroscope update|Gyroscope output (*list*)|
-|`mavlink`|Received MAVLink message|Message object|
-|`mavlink.<message_name>`|Received specific MAVLink message|Message object|
-|`mavlink.<message_id>`|Received specific MAVLink message|Message object|
-|`value`|Named value update (see below)|Name, value|
-|`value.<name>`|Specific named value update (see bellow)|Value|
+| Event                    | Description                              | Associated data               |
+| ------------------------ | ---------------------------------------- | ----------------------------- |
+| `connected`              | Connected to the drone                   |                               |
+| `disconnected`           | Connection is lost                       |                               |
+| `armed`                  | Armed state update                       | Armed state (_bool_)          |
+| `mode`                   | Flight mode update                       | Flight mode (_str_)           |
+| `landed`                 | Landed state update                      | Landed state (_bool_)         |
+| `print`                  | The drone sends text to the console      | Text                          |
+| `attitude`               | Attitude update                          | Attitude quaternion (_list_)  |
+| `attitude_euler`         | Attitude update                          | Euler angles (_list_)         |
+| `rates`                  | Angular rates update                     | Angular rates (_list_)        |
+| `channels`               | Raw RC channels update                   | Raw RC channels (_list_)      |
+| `motors`                 | Motors outputs update                    | Motors outputs (_list_)       |
+| `acc`                    | Accelerometer update                     | Accelerometer output (_list_) |
+| `gyro`                   | Gyroscope update                         | Gyroscope output (_list_)     |
+| `mavlink`                | Received MAVLink message                 | Message object                |
+| `mavlink.<message_name>` | Received specific MAVLink message        | Message object                |
+| `mavlink.<message_id>`   | Received specific MAVLink message        | Message object                |
+| `value`                  | Named value update (see below)           | Name, value                   |
+| `value.<name>`           | Specific named value update (see bellow) | Value                         |
 
 > [!NOTE]
 > Update events trigger on every new data from the drone, and do not mean the value is changed.
@@ -133,7 +133,7 @@ flix.set_controls(roll=0, pitch=0, yaw=0, throttle=0.6)
 
 ### Automatic flight
 
-To perform automatic flight, switch the mode to *AUTO*, either from the remote control, or from the code:
+To perform automatic flight, switch the mode to _AUTO_, either from the remote control, or from the code:
 
 ```python
 flix.set_mode('AUTO')
@@ -158,7 +158,7 @@ You also can control raw motors outputs directly:
 flix.set_motors([0.5, 0.5, 0.5, 0.5])  # set motors outputs in range [0, 1]
 ```
 
-In *AUTO* mode, the drone will arm automatically if the thrust is greater than zero, and disarm if thrust is zero. Therefore, to disarm the drone, set thrust to zero:
+In _AUTO_ mode, the drone will arm automatically if the thrust is greater than zero, and disarm if thrust is zero. Therefore, to disarm the drone, set thrust to zero:
 
 ```python
 flix.set_attitude([0, 0, 0], 0)  # disarm the drone
@@ -166,10 +166,10 @@ flix.set_attitude([0, 0, 0], 0)  # disarm the drone
 
 The following methods are in development and are not functional yet:
 
-* `set_position` — set target position.
-* `set_velocity` — set target velocity.
+- `set_position` — set target position.
+- `set_velocity` — set target velocity.
 
-To exit from *AUTO* mode move control sticks and the drone will switch to *STAB* mode.
+To exit from _AUTO_ mode move control sticks and the drone will switch to _STAB_ mode.
 
 ## Usage alongside QGroundControl
 
@@ -181,12 +181,12 @@ You can use the Flix library alongside the QGroundControl app, using a proxy mod
    flix-proxy
    ```
 
-2. Go to QGroundControl settings ⇒ *Comm Links*.
+2. Go to QGroundControl settings ⇒ _Comm Links_.
 3. Add new link with the following settings:
-   * *Name*: Proxy
-   * *Automatically Connect on Start*: ✓
-   * *Type*: UDP
-   * *Port*: 14560
+   - _Name_: Proxy
+   - _Automatically Connect on Start_: ✓
+   - _Type_: UDP
+   - _Port_: 14560
 4. Restart QGroundControl.
 
 <img src="../../docs/img/qgc-proxy.png" width="300">
@@ -197,9 +197,9 @@ Now you can run `pyflix` scripts and QGroundControl simultaneously.
 
 The following scripts demonstrate how to use the library:
 
-* [`cli.py`](../cli.py) — remote access to the drone's command line interface.
-* [`log.py`](../log.py) — download flight logs from the drone.
-* [`example.py`](../example.py) — a simple example, prints telemetry data and waits for events.
+- [`cli.py`](../cli.py) — remote access to the drone's command line interface.
+- [`log.py`](../log.py) — download flight logs from the drone.
+- [`example.py`](../example.py) — a simple example, prints telemetry data and waits for events.
 
 ## Advanced usage
 

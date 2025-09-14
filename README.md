@@ -2,7 +2,7 @@
 
 Reference repository for building the project
 
-### Images for reference
+## Images for reference
 
 <table>
   <tr>

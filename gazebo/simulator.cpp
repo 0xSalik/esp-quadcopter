@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Oleg Kalachev <okalachev@gmail.com>
-// Repository: https://github.com/okalachev/flix
+// Repository: https://github.com/0xSalik/esp-quadcopter
 
 // Gazebo plugin for running Arduino code and simulating the drone
 
@@ -34,7 +34,8 @@ using ignition::math::Vector3d;
 using namespace gazebo;
 using namespace std;
 
-class ModelFlix : public ModelPlugin {
+class ModelFlix : public ModelPlugin
+{
 private:
 	physics::ModelPtr model;
 	physics::LinkPtr body;
@@ -45,7 +46,8 @@ private:
 	LowPassFilter<Vector> accFilter = LowPassFilter<Vector>(0.1);
 
 public:
-	void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/) {
+	void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
+	{
 		this->model = _parent;
 		this->body = this->model->GetLink("body");
 		this->imu = dynamic_pointer_cast<sensors::ImuSensor>(sensors::get_sensor(model->GetScopedName(true) + "::body::imu")); // default::flix::body::imu
@@ -57,13 +59,15 @@ public:
 		gzmsg << "Flix plugin loaded" << endl;
 	}
 
-	void OnReset() {
+	void OnReset()
+	{
 		attitude = Quaternion(); // reset estimated attitude
 		__resetTime += __micros;
 		gzmsg << "Flix plugin reset" << endl;
 	}
 
-	void OnUpdate() {
+	void OnUpdate()
+	{
 		__micros = model->GetWorld()->SimTime().Double() * 1000000;
 		step();
 
@@ -87,9 +91,10 @@ public:
 		syncParameters();
 	}
 
-	void applyMotorForces() {
+	void applyMotorForces()
+	{
 		// thrusts
-		const double dist = 0.035355; // motors shift from the center, m
+		const double dist = 0.035355;		   // motors shift from the center, m
 		const double maxThrust = 0.03 * ONE_G; // ~30 g, https://youtu.be/VtKI4Pjx8Sk?&t=78
 
 		const float scale0 = 1.0, scale1 = 1.1, scale2 = 0.9, scale3 = 1.05; // imitating motors asymmetry
@@ -111,7 +116,8 @@ public:
 		body->AddRelativeTorque(Vector3d(0.0, 0.0, scale3 * maxTorque * motors[MOTOR_REAR_RIGHT]));
 	}
 
-	void initNode() {
+	void initNode()
+	{
 		nodeHandle = transport::NodePtr(new transport::Node());
 		nodeHandle->Init();
 		string ns = "~/" + model->GetName();
@@ -122,8 +128,10 @@ public:
 		motorPub[3] = nodeHandle->Advertise<msgs::Int>(ns + "/motor3");
 	}
 
-	void publishTopics() {
-		for (int i = 0; i < 4; i++) {
+	void publishTopics()
+	{
+		for (int i = 0; i < 4; i++)
+		{
 			msgs::Int msg;
 			msg.set_data(static_cast<int>(round(motors[i] * 1000)));
 			motorPub[i]->Publish(msg);
